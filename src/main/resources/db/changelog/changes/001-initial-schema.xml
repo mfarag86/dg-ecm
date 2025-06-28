@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001" author="system">
+        <comment>Create initial database schema for ECM system</comment>
+        
+        <!-- Create users table -->
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="department" type="VARCHAR(255)"/>
+            <column name="position" type="VARCHAR(255)"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+            <column name="last_login" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="version" type="BIGINT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create user_roles table -->
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create cases table -->
+        <createTable tableName="cases">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="case_number" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="assigned_to" type="VARCHAR(255)"/>
+            <column name="due_date" type="TIMESTAMP"/>
+            <column name="resolved_date" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="version" type="BIGINT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create case_notes table -->
+        <createTable tableName="case_notes">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="note_type" type="VARCHAR(255)"/>
+            <column name="case_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="version" type="BIGINT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create case_attachments table -->
+        <createTable tableName="case_attachments">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_path" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_size" type="BIGINT"/>
+            <column name="content_type" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="case_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="version" type="BIGINT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create event_publication table for Spring Modulith -->
+        <createTable tableName="event_publication">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="listener_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serialized_event" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="publication_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="completion_date" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Add foreign key constraints -->
+        <addForeignKeyConstraint baseTableName="user_roles" baseColumnNames="user_id"
+                                  constraintName="fk_user_roles_user_id"
+                                  referencedTableName="users" referencedColumnNames="id"
+                                  onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="case_notes" baseColumnNames="case_id"
+                                  constraintName="fk_case_notes_case_id"
+                                  referencedTableName="cases" referencedColumnNames="id"
+                                  onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="case_attachments" baseColumnNames="case_id"
+                                  constraintName="fk_case_attachments_case_id"
+                                  referencedTableName="cases" referencedColumnNames="id"
+                                  onDelete="CASCADE"/>
+
+        <!-- Create indexes for better performance -->
+        <createIndex tableName="users" indexName="idx_users_tenant_id">
+            <column name="tenant_id"/>
+        </createIndex>
+
+        <createIndex tableName="users" indexName="idx_users_username">
+            <column name="username"/>
+        </createIndex>
+
+        <createIndex tableName="users" indexName="idx_users_email">
+            <column name="email"/>
+        </createIndex>
+
+        <createIndex tableName="cases" indexName="idx_cases_tenant_id">
+            <column name="tenant_id"/>
+        </createIndex>
+
+        <createIndex tableName="cases" indexName="idx_cases_case_number">
+            <column name="case_number"/>
+        </createIndex>
+
+        <createIndex tableName="cases" indexName="idx_cases_status">
+            <column name="status"/>
+        </createIndex>
+
+        <createIndex tableName="cases" indexName="idx_cases_priority">
+            <column name="priority"/>
+        </createIndex>
+
+        <createIndex tableName="cases" indexName="idx_cases_assigned_to">
+            <column name="assigned_to"/>
+        </createIndex>
+
+        <createIndex tableName="case_notes" indexName="idx_case_notes_tenant_id">
+            <column name="tenant_id"/>
+        </createIndex>
+
+        <createIndex tableName="case_notes" indexName="idx_case_notes_case_id">
+            <column name="case_id"/>
+        </createIndex>
+
+        <createIndex tableName="case_attachments" indexName="idx_case_attachments_tenant_id">
+            <column name="tenant_id"/>
+        </createIndex>
+
+        <createIndex tableName="case_attachments" indexName="idx_case_attachments_case_id">
+            <column name="case_id"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog> 

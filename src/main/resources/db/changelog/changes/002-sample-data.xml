@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="002" author="system">
+        <comment>Insert sample data for ECM system</comment>
+        
+        <!-- Sample Users -->
+        <insert tableName="users">
+            <column name="tenant_id">default</column>
+            <column name="username">admin</column>
+            <column name="email">admin@example.com</column>
+            <column name="password">$2a$10$rDmFN6ZqJ9Yz6Yz6Yz6YzO6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6</column>
+            <column name="first_name">Admin</column>
+            <column name="last_name">User</column>
+            <column name="phone">+1234567890</column>
+            <column name="department">IT</column>
+            <column name="position">System Administrator</column>
+            <column name="is_active">true</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="tenant_id">default</column>
+            <column name="username">user1</column>
+            <column name="email">user1@example.com</column>
+            <column name="password">$2a$10$rDmFN6ZqJ9Yz6Yz6Yz6YzO6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6</column>
+            <column name="first_name">John</column>
+            <column name="last_name">Doe</column>
+            <column name="phone">+1234567891</column>
+            <column name="department">Support</column>
+            <column name="position">Support Agent</column>
+            <column name="is_active">true</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="tenant_id">default</column>
+            <column name="username">user2</column>
+            <column name="email">user2@example.com</column>
+            <column name="password">$2a$10$rDmFN6ZqJ9Yz6Yz6Yz6YzO6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6</column>
+            <column name="first_name">Jane</column>
+            <column name="last_name">Smith</column>
+            <column name="phone">+1234567892</column>
+            <column name="department">Sales</column>
+            <column name="position">Sales Representative</column>
+            <column name="is_active">true</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <!-- Sample User Roles -->
+        <insert tableName="user_roles">
+            <column name="user_id">1</column>
+            <column name="role">ADMIN</column>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id">1</column>
+            <column name="role">USER</column>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id">2</column>
+            <column name="role">USER</column>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id">3</column>
+            <column name="role">USER</column>
+        </insert>
+
+        <!-- Sample Cases -->
+        <insert tableName="cases">
+            <column name="tenant_id">default</column>
+            <column name="case_number">CASE-DEFAULT-1703123456789-12345678</column>
+            <column name="title">System Login Issue</column>
+            <column name="description">User cannot login to the system</column>
+            <column name="status">OPEN</column>
+            <column name="priority">HIGH</column>
+            <column name="category">Technical</column>
+            <column name="assigned_to">user1</column>
+            <column name="due_date" valueComputed="DATEADD('DAY', 2, CURRENT_TIMESTAMP)"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="cases">
+            <column name="tenant_id">default</column>
+            <column name="case_number">CASE-DEFAULT-1703123456790-87654321</column>
+            <column name="title">Password Reset Request</column>
+            <column name="description">User needs password reset</column>
+            <column name="status">IN_PROGRESS</column>
+            <column name="priority">MEDIUM</column>
+            <column name="category">Account</column>
+            <column name="assigned_to">user2</column>
+            <column name="due_date" valueComputed="DATEADD('DAY', 1, CURRENT_TIMESTAMP)"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="cases">
+            <column name="tenant_id">default</column>
+            <column name="case_number">CASE-DEFAULT-1703123456791-11223344</column>
+            <column name="title">Feature Request</column>
+            <column name="description">Request for new dashboard feature</column>
+            <column name="status">PENDING</column>
+            <column name="priority">LOW</column>
+            <column name="category">Enhancement</column>
+            <column name="assigned_to">admin</column>
+            <column name="due_date" valueComputed="DATEADD('DAY', 7, CURRENT_TIMESTAMP)"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <!-- Sample Case Notes -->
+        <insert tableName="case_notes">
+            <column name="tenant_id">default</column>
+            <column name="content">Initial investigation started</column>
+            <column name="note_type">INTERNAL</column>
+            <column name="case_id">1</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="case_notes">
+            <column name="tenant_id">default</column>
+            <column name="content">User contacted for additional information</column>
+            <column name="note_type">CUSTOMER</column>
+            <column name="case_id">1</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="case_notes">
+            <column name="tenant_id">default</column>
+            <column name="content">Password reset email sent</column>
+            <column name="note_type">INTERNAL</column>
+            <column name="case_id">2</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+        <insert tableName="case_notes">
+            <column name="tenant_id">default</column>
+            <column name="content">Feature request documented</column>
+            <column name="note_type">INTERNAL</column>
+            <column name="case_id">3</column>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="version">0</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog> 
