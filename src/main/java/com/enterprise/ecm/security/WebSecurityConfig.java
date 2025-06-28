@@ -39,7 +39,22 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                .anyRequest().permitAll() // Temporarily allow all requests
+                // Public endpoints
+                .requestMatchers("/auth/login", "/auth/register", "/auth/test").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                
+                // Admin-only endpoints
+                .requestMatchers("/users/**").hasRole("ADMIN")
+                .requestMatchers("/cases/stats/**").hasRole("ADMIN")
+                .requestMatchers("/users/stats/**").hasRole("ADMIN")
+                
+                // Authenticated user endpoints
+                .requestMatchers("/auth/me").authenticated()
+                .requestMatchers("/cases/**").authenticated()
+                
+                // All other requests require authentication
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // For H2 console
