@@ -1,10 +1,12 @@
 package com.enterprise.ecm.cases;
 
 import com.enterprise.ecm.shared.tenant.TenantContext;
+import com.enterprise.ecm.shared.logging.LoggingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,15 +15,14 @@ import java.util.UUID;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CaseService {
     
     private final CaseRepository caseRepository;
-    
-    public CaseService(CaseRepository caseRepository) {
-        this.caseRepository = caseRepository;
-    }
+    private final LoggingService loggingService;
     
     public Case createCase(Case caseEntity) {
+        loggingService.logInfo("Creating case", caseEntity);
         if (caseEntity.getCaseNumber() == null || caseEntity.getCaseNumber().trim().isEmpty()) {
             caseEntity.setCaseNumber(generateCaseNumber());
         }
@@ -29,6 +30,7 @@ public class CaseService {
     }
     
     public Optional<Case> getCaseById(Long id) {
+        loggingService.logDebug("Fetching case by id: {}", id);
         return caseRepository.findById(id);
     }
     
@@ -98,6 +100,7 @@ public class CaseService {
     }
     
     public void deleteCase(Long id) {
+        loggingService.logWarn("Deleting case: {}", id);
         caseRepository.deleteById(id);
     }
     

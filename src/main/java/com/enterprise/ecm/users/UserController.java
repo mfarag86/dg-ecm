@@ -5,12 +5,14 @@ import com.enterprise.ecm.users.dto.CreateUserRequest;
 import com.enterprise.ecm.users.dto.UpdateUserRequest;
 import com.enterprise.ecm.users.dto.UserDto;
 import com.enterprise.ecm.users.mapper.UserMapper;
+import com.enterprise.ecm.shared.logging.LoggingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import jakarta.validation.Valid;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
 @PreAuthorize("hasRole('ADMIN')")
@@ -27,15 +30,11 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    
-    public UserController(UserService userService, UserMapper userMapper, UserRepository userRepository) {
-        this.userService = userService;
-        this.userMapper = userMapper;
-        this.userRepository = userRepository;
-    }
+    private final LoggingService loggingService;
     
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
+        loggingService.logInfo("Received request to create user: {}", request.getUsername());
         User user = userService.createUser(request);
         UserDto response = userMapper.toDto(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -57,6 +56,7 @@ public class UserController {
     
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        loggingService.logDebug("Received request to get user by id: {}", id);
         Optional<User> user = userService.getUserById(id);
         return user.map(entity -> ResponseEntity.ok(userMapper.toDto(entity)))
                 .orElse(ResponseEntity.notFound().build());

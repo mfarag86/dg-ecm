@@ -4,6 +4,7 @@ import com.enterprise.ecm.cases.dto.CaseDto;
 import com.enterprise.ecm.cases.dto.CreateCaseRequest;
 import com.enterprise.ecm.cases.dto.UpdateCaseRequest;
 import com.enterprise.ecm.cases.mapper.CaseMapper;
+import com.enterprise.ecm.shared.logging.LoggingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,21 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/cases")
 public class CaseController {
     
     private final CaseService caseService;
     private final CaseMapper caseMapper;
-    
-    public CaseController(CaseService caseService, CaseMapper caseMapper) {
-        this.caseService = caseService;
-        this.caseMapper = caseMapper;
-    }
+    private final LoggingService loggingService;
     
     @PostMapping
     public ResponseEntity<CaseDto> createCase(@Valid @RequestBody CreateCaseRequest request) {
+        loggingService.logInfo("Received request to create case", request);
         Case caseEntity = caseMapper.toEntity(request);
         Case createdCase = caseService.createCase(caseEntity);
         CaseDto response = caseMapper.toDto(createdCase);
@@ -36,6 +36,7 @@ public class CaseController {
     
     @GetMapping("/{id}")
     public ResponseEntity<CaseDto> getCaseById(@PathVariable Long id) {
+        loggingService.logDebug("Received request to get case by id: {}", id);
         Optional<Case> caseEntity = caseService.getCaseById(id);
         return caseEntity.map(entity -> ResponseEntity.ok(caseMapper.toDto(entity)))
                 .orElse(ResponseEntity.notFound().build());
@@ -139,6 +140,7 @@ public class CaseController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCase(@PathVariable Long id) {
+        loggingService.logWarn("Received request to delete case: {}", id);
         caseService.deleteCase(id);
         return ResponseEntity.noContent().build();
     }

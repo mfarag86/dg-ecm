@@ -6,6 +6,7 @@ import com.enterprise.ecm.users.User;
 import com.enterprise.ecm.users.UserService;
 import com.enterprise.ecm.users.dto.UserDto;
 import com.enterprise.ecm.users.mapper.UserMapper;
+import com.enterprise.ecm.shared.logging.LoggingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -27,19 +30,11 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
     private final UserMapper userMapper;
-    
-    public AuthController(AuthenticationManager authenticationManager, 
-                         JwtTokenProvider tokenProvider, 
-                         UserService userService,
-                         UserMapper userMapper) {
-        this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
-        this.userService = userService;
-        this.userMapper = userMapper;
-    }
+    private final LoggingService loggingService;
     
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        loggingService.logInfo("Login attempt for user: {}", loginRequest.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
