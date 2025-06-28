@@ -2,6 +2,9 @@
 
 @use '@angular/material' as mat;
 
+/* Import Material Icons font */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 @include mat.core();
 
 $primary-palette: mat.define-palette(mat.$indigo-palette);
