@@ -1,0 +1,39 @@
+<div class="case-list-container">
+  <div class="header">
+    <h1>Cases</h1>
+    <button mat-raised-button color="primary" routerLink="/cases/new">
+      <mat-icon>add</mat-icon>
+      New Case
+    </button>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading cases...</p>
+  </div>
+
+  <div class="cases-grid" *ngIf="!loading && cases.length > 0">
+    <mat-card *ngFor="let case of cases" class="case-card">
+      <mat-card-header>
+        <mat-card-title>{{ case.title }}</mat-card-title>
+        <mat-card-subtitle>{{ case.caseNumber }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ case.description }}</p>
+        <div class="case-meta">
+          <span class="status" [class]="case.status.toLowerCase()">{{ case.status }}</span>
+          <span class="priority" [class]="case.priority.toLowerCase()">{{ case.priority }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && cases.length === 0">
+    <mat-icon>folder_open</mat-icon>
+    <h3>No cases found</h3>
+    <p>Get started by creating your first case.</p>
+    <button mat-raised-button color="primary" routerLink="/cases/new">
+      Create Case
+    </button>
+  </div>
+</div> 

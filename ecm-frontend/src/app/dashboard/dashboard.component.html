@@ -1,0 +1,118 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Welcome to the ECM System. Here's an overview of your cases and users.</p>
+  </div>
+
+  <div class="stats-grid" *ngIf="!loading">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon total">
+            <mat-icon>folder</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3>{{ totalCases }}</h3>
+            <p>Total Cases</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon open">
+            <mat-icon>folder_open</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3>{{ openCases }}</h3>
+            <p>Open Cases</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon progress">
+            <mat-icon>pending</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3>{{ inProgressCases }}</h3>
+            <p>In Progress</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon resolved">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3>{{ resolvedCases }}</h3>
+            <p>Resolved</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon users">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3>{{ totalUsers }}</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon active">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3>{{ activeUsers }}</h3>
+            <p>Active Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="progress-section" *ngIf="!loading">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Case Completion Rate</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="progress-container">
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="getCompletionRate()"
+            class="progress-bar">
+          </mat-progress-bar>
+          <div class="progress-text">
+            <span>{{ getCompletionRate() }}% Complete</span>
+            <span>{{ resolvedCases }} of {{ totalCases }} cases resolved</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading dashboard data...</p>
+  </div>
+</div> 

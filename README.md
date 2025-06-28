@@ -197,8 +197,32 @@ The application will start on `http://localhost:8080`
 
 ### Default Credentials
 
-- **Username**: `admin`
-- **Password**: `admin123`
+Test Users and Passwords
+Based on your sample data, here are the available test users:
+
+Admin User
+Username: admin
+Email: admin@example.com
+Password: password123
+Role: ADMIN + USER
+Department: IT
+Position: System Administrator
+Support User
+
+Username: user1
+Email: user1@example.com
+Password: password123
+Role: USER
+Department: Support
+Position: Support Agent
+Sales User
+
+Username: user2
+Email: user2@example.com
+Password: password123
+Role: USER
+Department: Sales
+Position: Sales Representative
 
 ## API Endpoints
 
