@@ -1,5 +1,6 @@
 package com.enterprise.ecm.users;
 
+import com.enterprise.ecm.shared.tenant.TenantContext;
 import com.enterprise.ecm.users.dto.CreateUserRequest;
 import com.enterprise.ecm.users.dto.UpdateUserRequest;
 import com.enterprise.ecm.users.dto.UserDto;
@@ -12,7 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -22,10 +26,12 @@ public class UserController {
     
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
     
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper, UserRepository userRepository) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.userRepository = userRepository;
     }
     
     @PostMapping
@@ -148,5 +154,42 @@ public class UserController {
     public ResponseEntity<Long> getActiveUserCount() {
         long count = userService.getActiveUserCount();
         return ResponseEntity.ok(count);
+    }
+    
+    @GetMapping("/debug/users")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Map<String, Object>> debugUsers() {
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            // Set tenant context for this request
+            TenantContext.setCurrentTenant("default");
+            
+            List<User> allUsers = userService.getAllUsers();
+            result.put("totalUsers", allUsers.size());
+            
+            List<Map<String, Object>> userDetails = new ArrayList<>();
+            for (User user : allUsers) {
+                Map<String, Object> userDetail = new HashMap<>();
+                userDetail.put("id", user.getId());
+                userDetail.put("username", user.getUsername());
+                userDetail.put("email", user.getEmail());
+                userDetail.put("tenantId", user.getTenantId());
+                userDetail.put("active", user.isActive());
+                userDetail.put("roles", user.getRoles());
+                
+                userDetails.add(userDetail);
+            }
+            result.put("users", userDetails);
+            
+            // Clear tenant context
+            TenantContext.clear();
+            
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            result.put("error", e.getMessage());
+            result.put("stackTrace", e.getStackTrace());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
     }
 } 

@@ -55,7 +55,7 @@ multi-tenant:
 
 # JWT Configuration
 jwt:
-  secret: your-secret-key-here-make-it-long-and-secure-in-production
+  secret: your-super-secure-jwt-secret-key-for-production-use-this-in-production
   expiration: 86400000 # 24 hours in milliseconds
 
 # Server Configuration

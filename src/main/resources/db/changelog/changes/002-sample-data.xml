@@ -13,7 +13,7 @@
             <column name="tenant_id">default</column>
             <column name="username">admin</column>
             <column name="email">admin@example.com</column>
-            <column name="password">$2a$10$rDmFN6ZqJ9Yz6Yz6Yz6YzO6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6</column>
+            <column name="password">$2b$10$b5UQ0eZmOza.7p2MIdaYQuFV.5cT7Ty8q8hjDLM6GM6cec.DzBlYW</column>
             <column name="first_name">Admin</column>
             <column name="last_name">User</column>
             <column name="phone">+1234567890</column>
@@ -29,7 +29,7 @@
             <column name="tenant_id">default</column>
             <column name="username">user1</column>
             <column name="email">user1@example.com</column>
-            <column name="password">$2a$10$rDmFN6ZqJ9Yz6Yz6Yz6YzO6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6</column>
+            <column name="password">$2b$10$b5UQ0eZmOza.7p2MIdaYQuFV.5cT7Ty8q8hjDLM6GM6cec.DzBlYW</column>
             <column name="first_name">John</column>
             <column name="last_name">Doe</column>
             <column name="phone">+1234567891</column>
@@ -45,7 +45,7 @@
             <column name="tenant_id">default</column>
             <column name="username">user2</column>
             <column name="email">user2@example.com</column>
-            <column name="password">$2a$10$rDmFN6ZqJ9Yz6Yz6Yz6YzO6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6Yz6</column>
+            <column name="password">$2b$10$b5UQ0eZmOza.7p2MIdaYQuFV.5cT7Ty8q8hjDLM6GM6cec.DzBlYW</column>
             <column name="first_name">Jane</column>
             <column name="last_name">Smith</column>
             <column name="phone">+1234567892</column>

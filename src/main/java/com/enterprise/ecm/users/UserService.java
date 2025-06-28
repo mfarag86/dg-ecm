@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.HashSet;
 
 @Service
 @Transactional
@@ -32,7 +33,8 @@ public class UserService implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByCurrentTenantAndUsername(username);
+        // Temporarily ignore tenant context for debugging
+        Optional<User> user = userRepository.findByUsernameIgnoreTenant(username);
         
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
@@ -40,11 +42,17 @@ public class UserService implements UserDetailsService {
         
         User userEntity = user.get();
         
+        // The roles should be loaded automatically due to @ElementCollection(fetch = FetchType.EAGER)
+        // If roles are still empty, we'll use a default role
+        if (userEntity.getRoles().isEmpty()) {
+            userEntity.addRole("USER");
+        }
+        
         return org.springframework.security.core.userdetails.User.builder()
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .authorities(userEntity.getRoles().stream()
-                        .map(SimpleGrantedAuthority::new)
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .collect(Collectors.toList()))
                 .disabled(!userEntity.isActive())
                 .build();
@@ -114,7 +122,12 @@ public class UserService implements UserDetailsService {
     }
     
     public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByCurrentTenantAndUsername(username);
+        // Get current tenant, default to 'default' if not set
+        String currentTenant = TenantContext.getCurrentTenant();
+        if (currentTenant == null) {
+            currentTenant = "default";
+        }
+        return userRepository.findByTenantAndUsername(currentTenant, username);
     }
     
     public Optional<User> getUserByEmail(String email) {

@@ -15,6 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -66,5 +70,41 @@ public class AuthController {
     public ResponseEntity<Void> logout() {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();
+    }
+    
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Auth controller is working!");
+    }
+    
+    @GetMapping("/test-password")
+    public ResponseEntity<Map<String, Object>> testPassword() {
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            // Test password encoding
+            String rawPassword = "password123";
+            String encodedPassword = "$2b$10$b5UQ0eZmOza.7p2MIdaYQuFV.5cT7Ty8q8hjDLM6GM6cec.DzBlYW";
+            
+            // Test user loading
+            Optional<User> user = userService.getUserByUsername("admin");
+            
+            result.put("rawPassword", rawPassword);
+            result.put("encodedPassword", encodedPassword);
+            result.put("userFound", user.isPresent());
+            
+            if (user.isPresent()) {
+                User userEntity = user.get();
+                result.put("username", userEntity.getUsername());
+                result.put("userPassword", userEntity.getPassword());
+                result.put("userRoles", userEntity.getRoles());
+                result.put("userActive", userEntity.isActive());
+            }
+            
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            result.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
     }
 } 

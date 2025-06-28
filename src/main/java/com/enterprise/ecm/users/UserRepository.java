@@ -41,6 +41,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT COUNT(u) FROM User u WHERE u.tenantId = :tenantId AND u.active = :active")
     long countByTenantAndActive(@Param("tenantId") String tenantId, @Param("active") boolean active);
     
+    @Query(value = "SELECT ur.role FROM user_roles ur JOIN users u ON ur.user_id = u.id WHERE u.username = :username AND u.tenant_id = :tenantId", nativeQuery = true)
+    List<String> findRolesByUsernameAndTenant(@Param("username") String username, @Param("tenantId") String tenantId);
+    
+    @Query("SELECT u FROM User u WHERE u.username = :username")
+    Optional<User> findByUsernameIgnoreTenant(@Param("username") String username);
+    
     // Default methods that use current tenant
     default List<User> findAllByCurrentTenant() {
         return findAllByTenant(TenantContext.getCurrentTenant());
